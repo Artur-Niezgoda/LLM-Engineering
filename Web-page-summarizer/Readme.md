@@ -92,6 +92,7 @@ The primary goal is to create a tool that can quickly summarize the main content
 * **Requests:** For making HTTP requests to fetch web pages.
 * **BeautifulSoup4:** For parsing HTML and extracting text content.
 * **python-dotenv:** For managing environment variables (especially the `OPENAI_API_KEY`).
+* **Selenium:** For browser automation to handle JavaScript-rendered web pages.
 
 ## Setup and Installation
 
@@ -112,9 +113,26 @@ The primary goal is to create a tool that can quickly summarize the main content
     ```bash
     pip install -r requirements.txt
     ```
-    *(If `requirements.txt` is missing, you can create it with the content provided below or install manually: `pip install openai requests beautifulsoup4 python-dotenv`)*
+    *(This will now include `selenium` along with other packages like `openai`, `requests`, `beautifulsoup4`, and `python-dotenv`)*
 
-4.  **Set Up Your OpenAI API Key:**
+4.  **Set Up WebDriver for Selenium:**
+    Selenium requires a WebDriver to interact with your chosen browser.
+    * **Download WebDriver:**
+        * For **Chrome**: Download [ChromeDriver](https://chromedriver.chromium.org/downloads) that matches your Chrome browser version.
+        * For **Firefox**: Download [GeckoDriver](https://github.com/mozilla/geckodriver/releases) that matches your Firefox browser version.
+        * For other browsers, find the appropriate WebDriver.
+    * **Make WebDriver Accessible:**
+        * **Option 1 (Recommended for simplicity):** Place the downloaded WebDriver executable (e.g., `chromedriver.exe` on Windows, `chromedriver` on Linux/macOS) in a directory that is part of your system's **PATH** environment variable.
+        * **Option 2:** Alternatively, you can modify the `web_scraper.py` script to point directly to the WebDriver executable's path (this is less portable).
+            ```python
+            # Example for Chrome in web_scraper.py
+            # from selenium.webdriver.chrome.service import Service as ChromeService
+            # service = ChromeService(executable_path='/path/to/your/chromedriver')
+            # driver = webdriver.Chrome(service=service, options=chrome_options)
+            ```
+    * **Note:** The provided `web_scraper.py` currently assumes the WebDriver (specifically ChromeDriver) is in your system's PATH. For more automated WebDriver management in Python projects, consider using the `webdriver-manager` package, though it's not included in this basic setup to keep dependencies minimal initially.
+
+5.  **Set Up Your OpenAI API Key:**
     Create a file named `.env` in the `Web-page-summarizer` directory. Add your OpenAI API key to this file:
     ```env
     OPENAI_API_KEY='your_actual_openai_api_key_here'
@@ -164,6 +182,10 @@ The project is organized into the following Python modules:
     * This tool uses a basic approach for web scraping. Websites heavily reliant on JavaScript for rendering content may not be summarized accurately. Consider tools like Selenium for such cases.
     * Some websites may block scraping attempts (e.g., via Cloudflare or other security measures), leading to errors or incomplete content.
 * Content Quality: The quality of the summary depends on the LLM used and the clarity of the extracted text.
+* **Selenium WebDriver Issues**:
+    * Ensure you have the correct WebDriver installed and that it's accessible via your system's PATH or explicitly configured in the code.
+    * The WebDriver version must match your browser version.
+    * Headless mode (used by default) can sometimes behave differently than a full browser; for complex sites, you might need to experiment with Selenium options.
 
 ## Potential Future Enhancements
 * Integration with Selenium or Playwright for better JavaScript-rendered page handling.

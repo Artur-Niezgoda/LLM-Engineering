@@ -2,4 +2,4 @@ requests
 beautifulsoup4
 openai
 python-dotenv
-
+selenium>=4.0
