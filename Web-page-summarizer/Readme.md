@@ -23,6 +23,7 @@ The primary goal is to create a tool that can quickly summarize the main content
 * **Requests:** For making HTTP requests to fetch web pages.
 * **BeautifulSoup4:** For parsing HTML and extracting text content.
 * **python-dotenv:** For managing environment variables (especially the `OPENAI_API_KEY`).
+* **Selenium:** For browser automation to handle JavaScript-rendered web pages.
 
 ## Setup and Installation
 
@@ -113,7 +114,7 @@ The primary goal is to create a tool that can quickly summarize the main content
     ```bash
     pip install -r requirements.txt
     ```
-    *(This will now include `selenium` along with other packages like `openai`, `requests`, `beautifulsoup4`, and `python-dotenv`)*
+
 
 4.  **Set Up WebDriver for Selenium:**
     Selenium requires a WebDriver to interact with your chosen browser.
