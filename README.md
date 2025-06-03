@@ -20,7 +20,6 @@ Individual projects are organized into their own subfolders within this reposito
     * **Description:** A Python application that takes a URL of a web page, scrapes its content, and uses an LLM to generate a concise summary. This project demonstrates web scraping, text processing, prompt engineering, and interaction with LLM APIs.
     * **Technologies:** Python, OpenAI API, BeautifulSoup, Requests.
 
-*(As you add more projects, list them here with a brief description and a link to their respective `Readme.md` files.)*
 
 ## Getting Started
 

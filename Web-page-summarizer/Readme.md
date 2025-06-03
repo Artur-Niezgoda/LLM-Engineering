@@ -52,11 +52,11 @@ The primary goal is to create a tool that can quickly summarize the main content
     ```
     Replace `your_actual_openai_api_key_here` with your valid OpenAI API key (e.g., `sk-proj-...`).
 
-## How to Run
+How to Run
+Once the setup is complete, you can run the application from your terminal within the Web-page-summarizer directory. The general command format is:
 
-Once the setup is complete, you can run the application from your terminal within the `Web-page-summarizer` directory:
+Bash
 
-```bash
 python main.py <URL_TO_SUMMARIZE> [--model MODEL_NAME]
 Examples:
 
@@ -64,12 +64,12 @@ Summarize a specific website using the default model (gpt-4o-mini):
 
 Bash
 
-python main.py "[https://www.example.com](https://www.example.com)"
+python main.py "https://www.example.com"
 Summarize a website and specify a different model:
 
 Bash
 
-python main.py "[https://edwarddonner.com](https://edwarddonner.com)" --model gpt-4
+python main.py "https://edwarddonner.com" --model gpt-4
 (Note: Ensure the specified model is compatible and you have access to it via your API key.)
 
 If you run python main.py without a URL, it may process pre-defined example URLs as coded in main.py.
@@ -99,16 +99,3 @@ Error handling for a wider range of web scraping issues.
 Batch summarization of multiple URLs.
 Acknowledgements
 This project is based on the "YOUR FIRST LAB" exercise from an LLM engineering course by Edward Donner. The foundational concepts and initial goal were inspired by this lab.
-
-
----
-
-## 3. Suggested content for `Web-page-summarizer/requirements.txt`
-
-openai
-requests
-beautifulsoup4
-python-dotenv
-
-
-This structure will make your repository well-organized and easy for others (and your future self) to navigate and understand each project.
