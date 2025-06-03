@@ -161,8 +161,8 @@ The project is organized into the following Python modules:
 ## Troubleshooting & Limitations
 * API Key: Ensure your OPENAI_API_KEY is correctly set in the .env file and is active.
 * Website Compatibility:
-* ** This tool uses a basic approach for web scraping. Websites heavily reliant on JavaScript for rendering content may not be summarized accurately. Consider tools like Selenium for such cases.**
-* ** Some websites may block scraping attempts (e.g., via Cloudflare or other security measures), leading to errors or incomplete content. **
+    * This tool uses a basic approach for web scraping. Websites heavily reliant on JavaScript for rendering content may not be summarized accurately. Consider tools like Selenium for such cases.
+    * Some websites may block scraping attempts (e.g., via Cloudflare or other security measures), leading to errors or incomplete content.
 * Content Quality: The quality of the summary depends on the LLM used and the clarity of the extracted text.
 
 ## Potential Future Enhancements
