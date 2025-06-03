@@ -52,50 +52,9 @@ The primary goal is to create a tool that can quickly summarize the main content
     ```
     Replace `your_actual_openai_api_key_here` with your valid OpenAI API key (e.g., `sk-proj-...`).
 
-How to Run
-Once the setup is complete, you can run the application from your terminal within the Web-page-summarizer directory. The general command format is:
+## How to Run
 
-Bash
+Once the setup is complete, you can run the application from your terminal within the `Web-page-summarizer` directory. The general command format is:
 
+```bash
 python main.py <URL_TO_SUMMARIZE> [--model MODEL_NAME]
-Examples:
-
-Summarize a specific website using the default model (gpt-4o-mini):
-
-Bash
-
-python main.py "https://www.example.com"
-Summarize a website and specify a different model:
-
-Bash
-
-python main.py "https://edwarddonner.com" --model gpt-4
-(Note: Ensure the specified model is compatible and you have access to it via your API key.)
-
-If you run python main.py without a URL, it may process pre-defined example URLs as coded in main.py.
-
-File Structure
-The project is organized into the following Python modules:
-
-main.py: Entry point of the application; handles command-line arguments and orchestrates the summarization.
-summarizer_service.py: Core service layer that coordinates web scraping, prompt generation, and LLM interaction.
-llm_handler.py: Manages communication with the LLM API (e.g., OpenAI).
-prompt_generator.py: Creates and formats the system and user prompts for the LLM.
-web_scraper.py: Contains the Website class responsible for fetching and parsing web page content.
-config_manager.py: Handles loading and validation of the API key from the .env file.
-requirements.txt: Lists project dependencies.
-.env (to be created by you): Stores your OPENAI_API_KEY.
-Troubleshooting & Limitations
-API Key: Ensure your OPENAI_API_KEY is correctly set in the .env file and is active.
-Website Compatibility:
-This tool uses a basic approach for web scraping. Websites heavily reliant on JavaScript for rendering content may not be summarized accurately. Consider tools like Selenium for such cases.
-Some websites may block scraping attempts (e.g., via Cloudflare or other security measures), leading to errors or incomplete content.
-Content Quality: The quality of the summary depends on the LLM used and the clarity of the extracted text.
-Potential Future Enhancements
-Integration with Selenium or Playwright for better JavaScript-rendered page handling.
-More sophisticated text cleaning and extraction logic.
-Option for users to specify summary length or style.
-Error handling for a wider range of web scraping issues.
-Batch summarization of multiple URLs.
-Acknowledgements
-This project is based on the "YOUR FIRST LAB" exercise from an LLM engineering course by Edward Donner. The foundational concepts and initial goal were inspired by this lab.
