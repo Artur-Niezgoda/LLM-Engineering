@@ -113,7 +113,7 @@ The primary goal is to create a tool that can quickly summarize the main content
     ```bash
     pip install -r requirements.txt
     ```
-    *(This will now include `selenium` along with other packages like `openai`, `requests`, `beautifulsoup4`, and `python-dotenv`)*
+
 
 4.  **Set Up WebDriver for Selenium:**
     Selenium requires a WebDriver to interact with your chosen browser.
