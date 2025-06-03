@@ -80,12 +80,12 @@ if __name__ == '__main__':
         print("-------------------------------\n")
 
     # Test with a potentially problematic URL (e.g., one that might block simple scrapers)
-    # problematic_url = "https://openai.com" # As mentioned in the notebook
-    # print(f"\n--- Summarizing (potentially problematic): {problematic_url} ---")
-    # problematic_summary = summarize_website(problematic_url)
-    # if problematic_summary:
-    #     print("\n--- Generated Summary (Problematic URL) ---")
-    #     print(problematic_summary)
-    # else:
-    #     print("\nNo summary was generated for the problematic URL.")
-    # print("-------------------------------\n")
+    problematic_url = "https://openai.com" # As mentioned in the notebook
+    print(f"\n--- Summarizing (potentially problematic): {problematic_url} ---")
+    problematic_summary = summarize_website(problematic_url)
+    if problematic_summary:
+        print("\n--- Generated Summary (Problematic URL) ---")
+        print(problematic_summary)
+    else:
+        print("\nNo summary was generated for the problematic URL.")
+    print("-------------------------------\n")
