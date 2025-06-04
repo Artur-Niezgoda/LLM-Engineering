@@ -17,7 +17,7 @@ DEFAULT_HEADERS = {
 class Website:
     """
     Represents a webpage and provides methods to extract its title, text content, and all links.
-    Uses Selenium to handle JavaScript-rendered pages by default, with a fallback to requests.
+    Uses Selenium for JavaScript-rendered pages and has a fallback to requests for static pages.
     """
 
     def __init__(self, url: str, headers: dict = None, use_selenium: bool = True):
@@ -26,30 +26,27 @@ class Website:
 
         Args:
             url (str): The URL of the website to scrape.
-            headers (dict, optional): HTTP headers to use for requests or Selenium user-agent.
+            headers (dict, optional): HTTP headers (used for requests and Selenium user-agent).
                                       Defaults to DEFAULT_HEADERS.
             use_selenium (bool, optional): Whether to use Selenium for fetching. Defaults to True.
-                                           Set to False to use requests for static pages.
-
-        Raises:
-            Exception: If an error occurs during page loading or parsing.
         """
         self.url = url
         self.title = "No title found"
         self.text = ""
-        self.links: List[str] = [] # Initialize links list
+        self.links: List[str] = []
 
         if headers is None:
             headers = DEFAULT_HEADERS
 
         if not use_selenium:
-            # Fallback to requests for static content if Selenium is not desired
+            # Fallback to requests for static content
             try:
                 print(f"Fetching URL with requests: {self.url}")
-                response = requests.get(url, headers=headers, timeout=15) # Increased timeout
-                response.raise_for_status() # Raise an exception for HTTP errors (4xx or 5xx)
+                response = requests.get(url, headers=headers, timeout=15)
+                response.raise_for_status()
                 soup = BeautifulSoup(response.content, 'html.parser')
                 self._parse_soup(soup)
+                print(f"Successfully scraped {self.url} with requests.")
             except requests.exceptions.RequestException as e:
                 self.text = f"Error fetching URL with requests: {e}"
                 print(f"Error fetching URL {self.url} with requests: {e}")
@@ -62,35 +59,32 @@ class Website:
         driver = None
         try:
             chrome_options = ChromeOptions()
-            chrome_options.add_argument("--headless")  # Run Chrome in headless mode (no UI)
-            chrome_options.add_argument("--no-sandbox") # Recommended for running as root/in containers
-            chrome_options.add_argument("--disable-dev-shm-usage") # Overcome limited resource problems
-            chrome_options.add_argument(f"user-agent={headers['User-Agent']}") # Set user agent
-            chrome_options.add_argument("--window-size=1920,1080") # Set a consistent window size
-            chrome_options.add_argument("--disable-gpu") # Often recommended for headless on Linux
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument(f"user-agent={headers['User-Agent']}")
+            chrome_options.add_argument("--window-size=1920,1080")
+            chrome_options.add_argument("--disable-gpu")
+            chrome_options.add_argument("--enable-unsafe-swiftshader")
+            chrome_options.add_argument("--disable-extensions")
+            chrome_options.add_argument("--log-level=3")
+            chrome_options.add_argument("--blink-settings=imagesEnabled=false")
 
-            # Initialize WebDriver. Assumes chromedriver is in PATH.
-            # For more robust WebDriver management, consider 'webdriver_manager' library.
-            # Example using webdriver_manager:
-            # from webdriver_manager.chrome import ChromeDriverManager
-            # driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
             driver = webdriver.Chrome(options=chrome_options)
 
             print(f"Fetching URL with Selenium: {self.url}")
             driver.get(url)
 
-            # Wait for the body tag to be present. For complex pages, you might need
-            # to wait for specific content elements to appear.
+            # Wait for the body tag to be present
             WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
 
-            # Optional: Add a small delay to ensure all JS has executed and content is rendered
-            # time.sleep(3) # Use sparingly, specific waits are better
-
             page_source = driver.page_source
+
             soup = BeautifulSoup(page_source, 'html.parser')
             self._parse_soup(soup)
+            print(f"Successfully scraped {self.url} with Selenium.")
 
         except Exception as e:
             self.text = f"Error fetching or processing URL {self.url} with Selenium: {e}"
@@ -103,21 +97,25 @@ class Website:
     def _parse_soup(self, soup: BeautifulSoup):
         """
         Helper method to parse the BeautifulSoup object and extract title, text, and links.
-
-        Args:
-            soup (BeautifulSoup): The BeautifulSoup object representing the webpage.
         """
         self.title = soup.title.string.strip() if soup.title and soup.title.string else "No title found"
 
-        # Remove irrelevant tags from the body to clean up text content
+        # Extract all href attributes from <a> tags
+        raw_links = []
+        for link_tag in soup.find_all('a', href=True):
+            href = link_tag.get('href')
+            if href and href.strip():
+                raw_links.append(href)
+        self.links = raw_links
+
+        # Remove irrelevant tags from the body for text extraction
         if soup.body:
-            # Common tags to remove that don't contribute to main content
             tags_to_remove = ["script", "style", "img", "input", "nav", "footer", "aside", "header", "form", "button", "svg", "iframe", "link", "meta"]
             for irrelevant_tag_name in tags_to_remove:
                 for tag in soup.body.find_all(irrelevant_tag_name):
                     tag.decompose()
 
-            # Attempt to find main content areas using common selectors (heuristic)
+            # Attempt to find main content areas using common selectors
             main_content_selectors = ['main', 'article', '[role="main"]', '.content', '#content', '.main-content', '#main-content']
             content_area = None
             for selector in main_content_selectors:
@@ -135,10 +133,6 @@ class Website:
         if not self.text.strip():
             self.text = "Could not extract meaningful text content."
 
-        # Extract all href attributes from <a> tags
-        raw_links = [link.get('href') for link in soup.find_all('a')]
-        self.links = [link for link in raw_links if link and link.strip()] # Filter out None or empty strings
-
     def get_contents(self) -> str:
         """
         Returns a formatted string containing the webpage's title and its cleaned text content.
@@ -149,34 +143,26 @@ class Website:
         """
         return f"Webpage Title:\n{self.title}\nWebpage Contents:\n{self.text}\n\n"
 
-# Example usage (for testing this module directly)
+# Example usage for testing this module directly
 if __name__ == '__main__':
-    print("--- Testing web_scraper.py with Selenium and Requests ---")
+    print("--- Testing web_scraper.py with Link Extraction ---")
 
     test_urls = [
-        "https://www.google.com", # Good for Selenium test
-        "https://example.com",    # Simple static site for requests test
-        "http://nonexistent-domain-12345.com" # Error case
+        "https://huggingface.co",
+        "https://example.com",
+        "https://www.wikipedia.org",
+        "https://openai.com", # Known Cloudflare protected site
+        "http://nonexistent-domain-12345.com"
     ]
 
     for url_to_test in test_urls:
         print(f"\n--- Attempting to scrape: {url_to_test} ---")
         try:
-            # Try with Selenium first
-            site_selenium = Website(url_to_test, use_selenium=True)
-            print(f"Selenium Title: {site_selenium.title}")
-            print(f"Selenium Text (first 300 chars): {site_selenium.text[:300].strip()}...")
-            print(f"Selenium Links (first 5): {site_selenium.links[:5]}")
-            print(f"Total Selenium Links: {len(site_selenium.links)}")
-
-            # Also try with requests for comparison on static sites
-            if "example.com" in url_to_test: # Only test requests on a known static site
-                site_requests = Website(url_to_test, use_selenium=False)
-                print(f"Requests Title: {site_requests.title}")
-                print(f"Requests Text (first 300 chars): {site_requests.text[:300].strip()}...")
-                print(f"Requests Links (first 5): {site_requests.links[:5]}")
-                print(f"Total Requests Links: {len(site_requests.links)}")
-
+            site = Website(url_to_test, use_selenium=True)
+            print(f"Title: {site.title}")
+            print(f"Text (first 300 chars of {len(site.text)} total):")
+            print(site.text[:300].strip() + "...")
+            print(f"Links (first 5 of {len(site.links)} total): {site.links[:5]}")
         except Exception as e:
             print(f"Could not scrape {url_to_test}: {e}")
         print("---------------------------------------\n")
