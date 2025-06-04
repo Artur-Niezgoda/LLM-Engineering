@@ -24,7 +24,6 @@ Individual projects are organized into their own subfolders within this reposito
     * **Description:** A Python application that scrapes company websites, intelligently identifies relevant information across multiple pages, and uses an LLM to generate detailed marketing brochures in Markdown format.
     * **Technologies:** Python, OpenAI API, BeautifulSoup, Requests, Selenium, `argparse`, `python-dotenv`.
 
-*(As you add more projects, list them here with a brief description and a link to their respective `Readme.md` files.)*
 
 ## Getting Started
 
