@@ -20,7 +20,7 @@ Individual projects are organized into their own subfolders within this reposito
     * **Description:** A Python application that takes a URL of a web page, scrapes its content, and uses an LLM to generate a concise summary. This project demonstrates web scraping, text processing, prompt engineering, and interaction with LLM APIs.
     * **Technologies:** Python, OpenAI API, BeautifulSoup, Requests, Selenium.
 
-* **[Marketing Brochures Generator](./marketing-brochures/README.md)**
+* **[Marketing Brochures Generator](./marketing-brochures/Readme.md)**
     * **Description:** A Python application that scrapes company websites, intelligently identifies relevant information across multiple pages, and uses an LLM to generate detailed marketing brochures in Markdown format.
     * **Technologies:** Python, OpenAI API, BeautifulSoup, Requests, Selenium, `argparse`, `python-dotenv`.
 
